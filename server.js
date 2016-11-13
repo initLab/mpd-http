@@ -1,19 +1,17 @@
 'use strict';
 
-let fs = require('fs');
-let net = require('net');
-let http = require('http');
-let dispatcher = require('httpdispatcher');
+const fs = require('fs');
+const net = require('net');
+const http = require('http');
+const dispatcher = require('httpdispatcher');
 
-var config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+const socket = new net.Socket();
 
-let socket = new net.Socket();
 let clientState = 0;
-
 let mpdVersion = '';
 let mpdStatus = {};
 let mpdSong = {};
-
 let response = null;
 
 function leadingZero(num) {
@@ -25,8 +23,9 @@ function leadingZero(num) {
 }
 
 function logger(line) {
-	var dt = new Date;
-	var args = [line];
+	const dt = new Date;
+	const args = [line];
+	
 	args.unshift(
 		'[' +
 		leadingZero(dt.getDate()) + '.' +
@@ -37,6 +36,7 @@ function logger(line) {
 		leadingZero(dt.getSeconds()) +
 		']'
 	);
+	
 	console.log.apply(console, args);
 }
 
@@ -44,13 +44,13 @@ function parseResponse(lines) {
 	let parsed = {};
 	
 	for (let i = 0; i < lines.length; ++i) {
-		let line = lines[i];
+		const line = lines[i];
 
 		if (line === 'OK') {
 			break;
 		}
 
-		let matches = line.match(/^([a-z]+): (.*)$/i);
+		const matches = line.match(/^([a-z]+): (.*)$/i);
 		
 		if (!matches) {
 			return;
@@ -74,11 +74,11 @@ socket.on('error', function(err) {
 });
 
 socket.on('data', function(data) {
-	let lines = data.toString().split('\n');
+	const lines = data.toString().split('\n');
 	
 	switch (clientState) {
 		case 0:
-			let matches = lines[0].match(/^OK MPD ([0-9.]+)$/);
+			const matches = lines[0].match(/^OK MPD ([0-9.]+)$/);
 
 			if (matches) {
 				clientState = 1;
@@ -141,7 +141,7 @@ dispatcher.onGet('/status', function(req, res) {
 });
 
 http.createServer(function(req, res) {
-	let conn = req.connection;
+	const conn = req.connection;
 	
 	logger('HTTP client connected: ' + conn.remoteAddress + ':' + conn.remotePort);
 	logger(req.method + ' ' + req.url);
