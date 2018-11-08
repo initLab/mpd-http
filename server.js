@@ -51,10 +51,10 @@ function parseResponse(lines) {
 			break;
 		}
 
-		const matches = line.match(/^([a-z]+): (.*)$/i);
+		const matches = line.match(/^([a-z_-]+): (.*)$/i);
 		
 		if (!matches) {
-			return;
+			continue;
 		}
 		
 		parsed[matches[1]] = matches[2];
