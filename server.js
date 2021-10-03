@@ -3,8 +3,7 @@
 const fs = require('fs');
 const net = require('net');
 const http = require('http');
-const HttpDispatcher = require('httpdispatcher');
-const dispatcher = new HttpDispatcher;
+const dispatcher = require('httpdispatcher');
 
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 const socket = new net.Socket();
