@@ -18,14 +18,14 @@ function leadingZero(num) {
 	if (num > 9) {
 		return num;
 	}
-	
+
 	return '0' + num;
 }
 
 function logger(line) {
 	const dt = new Date;
 	const args = [line];
-	
+
 	args.unshift(
 		'[' +
 		leadingZero(dt.getDate()) + '.' +
@@ -36,13 +36,13 @@ function logger(line) {
 		leadingZero(dt.getSeconds()) +
 		']'
 	);
-	
+
 	console.log.apply(console, args);
 }
 
 function parseResponse(lines) {
 	let parsed = {};
-	
+
 	for (let i = 0; i < lines.length; ++i) {
 		const line = lines[i];
 
@@ -51,17 +51,17 @@ function parseResponse(lines) {
 		}
 
 		const matches = line.match(/^([a-z_-]+): (.*)$/i);
-		
+
 		if (!matches) {
 			continue;
 		}
-		
+
 		parsed[matches[1]] = matches[2];
 	}
-	
+
 	return parsed;
 }
-	
+
 socket.on('close', function() {
 	clientState = 0;
 	logger('Connection to mpd closed');
@@ -75,7 +75,7 @@ socket.on('error', function(err) {
 
 socket.on('data', function(data) {
 	const lines = data.toString().split('\n');
-	
+
 	switch (clientState) {
 		case 0:
 			const matches = lines[0].match(/^OK MPD ([0-9.]+)$/);
@@ -115,7 +115,7 @@ socket.on('data', function(data) {
 
 function getSong() {
 	logger('Connecting to mpd...');
-	
+
 	socket.connect(config.mpd.port, config.mpd.host, function() {
 		logger('Connected to mpd');
 	});
@@ -125,13 +125,13 @@ function sendResponse(data) {
 	if (response === null) {
 		return;
 	}
-	
+
 	response.writeHead(200, {
 		'Content-Type': 'application/json'
 	});
-	
+
 	response.end(JSON.stringify(data));
-	
+
 	response = null;
 }
 
@@ -142,16 +142,16 @@ dispatcher.onGet('/status', function(req, res) {
 
 http.createServer(function(req, res) {
 	const conn = req.connection;
-	
+
 	logger('HTTP client connected: ' + conn.remoteAddress + ':' + conn.remotePort);
 	logger(req.method + ' ' + req.url);
-	
+
 	try {
 		dispatcher.dispatch(req, res);
 	}
 	catch(err) {
 		logger(err);
 	}
-}).listen(config.listen.port, function() {
-	logger('Server listening on: http://0.0.0.0:' + config.listen.port);
+}).listen(config.listen, function() {
+	logger('Server listening on port ' + config.listen.port);
 });
