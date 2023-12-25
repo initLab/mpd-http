@@ -31,7 +31,7 @@ function logger(line) {
 		'[' +
 		leadingZero(dt.getDate()) + '.' +
 		leadingZero(dt.getMonth()) + '.' +
-		(1900 + dt.getYear()) + ' ' +
+		dt.getFullYear() + ' ' +
 		leadingZero(dt.getHours()) + ':' +
 		leadingZero(dt.getMinutes()) + ':' +
 		leadingZero(dt.getSeconds()) +
