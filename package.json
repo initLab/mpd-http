@@ -9,6 +9,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "httpdispatcher": "^1.0.0"
+    "httpdispatcher": "^2.2.0"
   }
 }

@@ -3,10 +3,11 @@
 const fs = require('fs');
 const net = require('net');
 const http = require('http');
-const dispatcher = require('httpdispatcher');
+const HttpDispatcher = require('httpdispatcher');
 
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 const socket = new net.Socket();
+const dispatcher = new HttpDispatcher();
 
 let clientState = 0;
 let mpdVersion = '';
